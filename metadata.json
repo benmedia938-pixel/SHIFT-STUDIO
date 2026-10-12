@@ -1,0 +1,6 @@
+{
+  "name": "AnyShift – Free Online Tools & Calculators Network",
+  "description": "Over 170+ fast, private browser-based utilities, file converters, ecommerce calculators, financial tools, and developer helpers with zero sign-up.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
