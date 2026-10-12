@@ -103,10 +103,12 @@ export const HomeDashboard: React.FC<HomeDashboardProps> = ({
               ))}
             </div>
 
-            {/* Adsterra Banner placed after each row of 3 tools */}
-            <div className="my-4">
-              {chunkIdx % 2 === 0 ? (
+            {/* Adsterra Banners strategically placed after every 3 tools */}
+            <div className="my-5">
+              {chunkIdx % 3 === 0 ? (
                 <AdSlot placement="header-leaderboard" />
+              ) : chunkIdx % 3 === 1 ? (
+                <AdSlot placement="dual-rectangle" />
               ) : (
                 <AdSlot placement="in-feed" />
               )}

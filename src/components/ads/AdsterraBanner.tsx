@@ -11,13 +11,25 @@ interface AdsterraBannerProps {
 export const AdsterraBanner: React.FC<AdsterraBannerProps> = ({ type, className = '' }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Exact dimension map for zero layout shifts (CLS prevention)
+  const dimensions: Record<AdsterraBannerType, { w: number; h: number; minH: string; minW: string }> = {
+    '728x90': { w: 728, h: 90, minH: 'min-h-[90px]', minW: 'max-w-[728px]' },
+    '300x250': { w: 300, h: 250, minH: 'min-h-[250px]', minW: 'w-[300px]' },
+    '160x600': { w: 160, h: 600, minH: 'min-h-[600px]', minW: 'w-[160px]' },
+    '160x300': { w: 160, h: 300, minH: 'min-h-[300px]', minW: 'w-[160px]' },
+    '468x60': { w: 468, h: 60, minH: 'min-h-[60px]', minW: 'max-w-[468px]' },
+    '320x50': { w: 320, h: 50, minH: 'min-h-[50px]', minW: 'max-w-[320px]' },
+    'native': { w: 728, h: 180, minH: 'min-h-[160px]', minW: 'w-full' }
+  };
+
+  const dim = dimensions[type];
+
   useEffect(() => {
     if (!containerRef.current) return;
     const container = containerRef.current;
     container.innerHTML = '';
 
     if (type === 'native') {
-      // Native Banner container
       const nativeContainer = document.createElement('div');
       nativeContainer.id = ADSTERRA_KEYS.NATIVE_BANNER.containerId;
       container.appendChild(nativeContainer);
@@ -30,7 +42,6 @@ export const AdsterraBanner: React.FC<AdsterraBannerProps> = ({ type, className 
       return;
     }
 
-    // Standard Iframe Adsterra Banner
     let config: { key: string; width: number; height: number; url: string };
     switch (type) {
       case '728x90':
@@ -61,7 +72,9 @@ export const AdsterraBanner: React.FC<AdsterraBannerProps> = ({ type, className 
     iframe.style.border = 'none';
     iframe.style.overflow = 'hidden';
     iframe.style.borderRadius = '8px';
-    iframe.style.maxWidth = '100%';
+    iframe.style.display = 'block';
+    iframe.style.margin = '0 auto';
+    iframe.setAttribute('loading', 'lazy');
     iframe.scrolling = 'no';
     iframe.title = `Adsterra Ad ${type}`;
 
@@ -71,6 +84,7 @@ export const AdsterraBanner: React.FC<AdsterraBannerProps> = ({ type, className 
         <head>
           <base target="_blank" />
           <style>
+            * { box-sizing: border-box; }
             body { margin: 0; padding: 0; display: flex; align-items: center; justify-content: center; background: transparent; overflow: hidden; }
           </style>
         </head>
@@ -93,18 +107,14 @@ export const AdsterraBanner: React.FC<AdsterraBannerProps> = ({ type, className 
     container.appendChild(iframe);
   }, [type]);
 
-  const handleContainerClick = () => {
-    // If user clicks on the ad banner wrapper, trigger smartlink
-    triggerSmartlink(Math.floor(Math.random() * 3));
-  };
-
   return (
     <div 
-      className={`adsterra-banner-wrapper relative flex flex-col items-center justify-center overflow-hidden my-2 ${className}`}
+      className={`adsterra-banner-container relative flex items-center justify-center overflow-hidden my-1 ${dim.minH} ${dim.minW} mx-auto ${className}`}
+      style={{ contain: 'layout paint' }}
     >
       <div 
         ref={containerRef} 
-        className="flex items-center justify-center max-w-full overflow-hidden" 
+        className="flex items-center justify-center w-full h-full overflow-hidden" 
       />
     </div>
   );

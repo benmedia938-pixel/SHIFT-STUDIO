@@ -131,6 +131,11 @@ export const ToolDetailView: React.FC<ToolDetailViewProps> = ({
               </div>
             </div>
           )}
+
+          {/* Additional Sidebar 300x250 Banner */}
+          <div className="p-3 rounded-2xl bg-slate-900/60 border border-slate-800 flex justify-center items-center">
+            <AdSlot placement="content-rectangle" />
+          </div>
         </div>
       </div>
     </div>
